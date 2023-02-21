@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="tsp" type="ROS_Ant_tsp2.py" name="ROS_Ant_tsp"  output="screen">
+     <param name="tp_number" type="int" value="2" />    <!-- 시작 지점 포함한 경유할 지점 개수 -->
+     <rosparam param="cities">[[-43.5, 44.33], [-43.6, 44.33]]</rosparam>   <!-- 경유 지점들의 각 좌표 -->
+  </node>
+</launch>

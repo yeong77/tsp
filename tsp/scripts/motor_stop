@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import time
+import rospy
+from std_msgs.msg import UInt8
+from geometry_msgs.msg import Twist
+
+class motor_stop():
+	def __init__(self):
+		self.old_time = time.time()
+		self.time_interval = 0
+		self.pub_cmd_vel = rospy.Publisher('/cmd_vel', Twist, queue_size = 10)
+		self.detect_sign_pub = rospy.Publisher('height_detect', UInt8, queue_size=1)
+		while not rospy.is_shutdown():
+			self.stop()
+		
+	def stop(self):
+		new_time = time.time()
+		self.time_interval = new_time - self.old_time
+		print("self.time_interval : %f" %(self.time_interval))
+		if self.time_interval < 10:
+
+			twist = Twist()
+
+			rospy.loginfo("motor_stop")
+			twist.linear.x = 0
+			twist.linear.y = 0
+			twist.linear.z = 0
+			twist.angular.x = 0
+			twist.angular.y = 0
+			twist.angular.z = 0
+
+			self.pub_cmd_vel.publish(twist)
+
+		else:
+			start_point = UInt8()
+			start_point.data = 5
+			self.detect_sign_pub.publish(start_point)
+			exit()
+
+	def main(self):
+		rospy.spin()
+
+if __name__ == '__main__':
+		rospy.init_node('motor_stop')
+		node = motor_stop()
+		node.main()
